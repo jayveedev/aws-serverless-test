@@ -1,0 +1,38 @@
+{
+  "name": "aws-automations",
+  "version": "1.0.0",
+  "description": "A simple serverless starter template with essential configuration",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env USER=$(whoami) sls dev --stage $USER-dev",
+    "deploy:dev": "cross-env USER=$(whoami) && sls deploy --stage $USER-dev",
+    "deploy:prod": "sls deploy --stage prod",
+    "invoke:local": "sls deploy function --stage prod --function",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/**/*.js",
+    "format": "prettier --write src/**/*.js",
+    "cross-env": "cross-env"
+  },
+  "keywords": [
+    "serverless",
+    "aws",
+    "lambda",
+    "starter"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "cross-env": "^10.0.0",
+    "eslint": "^9.14.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.11.0",
+    "prettier": "^3.3.3",
+    "serverless": "^4.4.11"
+  },
+  "dependencies": {
+    "@serverless/aws-lambda-sdk": "^0.15.15"
+  }
+}
