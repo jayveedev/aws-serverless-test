@@ -43,7 +43,109 @@ This guide walks you through setting up AWS and the Serverless Framework for dep
 5. Add description and click **Create access key**
 6. **Important**: Copy both `Access Key ID` and `Secret Access Key`
 
-## Step 2: Configure AWS Credentials
+## Step 2: Install Serverless Framework Globally
+
+### 2.1 Install Serverless CLI
+
+Install the Serverless Framework CLI globally to use it from anywhere on your system:
+
+```bash
+npm install -g serverless@latest
+```
+
+### 2.2 Verify Installation
+
+Confirm the installation was successful:
+
+```bash
+# Check version
+serverless --version
+
+# Or use the short form
+sls --version
+```
+
+You should see output similar to:
+
+```
+Framework Core: 4.4.11
+Plugin: 7.2.0
+SDK: 4.5.1
+```
+
+### 2.3 Available Commands
+
+With serverless installed globally, you can use these commands:
+
+```bash
+# Create a new service from template
+sls create --template aws-nodejs --path my-service
+
+# Deploy your service
+sls deploy
+
+# Invoke a function
+sls invoke --function functionName
+
+# View logs
+sls logs --function functionName
+
+# Remove deployed service
+sls remove
+```
+
+## Step 3: Connect to Serverless Account
+
+### 3.1 Create/Login to Serverless Account
+
+The Serverless Framework provides a dashboard for monitoring and managing your serverless applications. Connect your CLI to your account:
+
+```bash
+# Login to existing account or create new one
+serverless login
+
+# Or use the short form
+sls login
+```
+
+This will:
+
+1. Open your browser to the Serverless Dashboard
+2. Prompt you to sign up for a new account or log into an existing one
+3. Automatically authenticate your CLI with your account
+
+### 3.2 Create Organization and App (Optional)
+
+If you want to organize your projects in the Serverless Dashboard:
+
+```bash
+# Create a new organization
+sls org create --name your-org-name
+
+# Create a new app under your organization
+sls app create --name your-app-name --org your-org-name
+```
+
+### 3.3 Verify Connection
+
+Check that you're properly authenticated:
+
+```bash
+# List your organizations
+sls org list
+
+# List your apps
+sls app list
+```
+
+**Note**: You can also use the Serverless Framework without connecting to an account, but you'll miss out on:
+
+- Deployment monitoring and metrics
+- Error tracking and alerting
+- Team collaboration features
+- CI/CD integration capabilities
+
+## Step 4: Configure AWS Credentials
 
 ### Option 1: Environment Variables (Recommended)
 
@@ -63,9 +165,9 @@ npm install -g aws-cli
 aws configure
 ```
 
-## Step 3: Project Setup
+## Step 5: Project Setup
 
-### 3.1 Initialize Project
+### 5.1 Initialize Project
 
 ```bash
 # Create project directory
@@ -76,11 +178,10 @@ cd my-serverless-project
 npm init -y
 ```
 
-### 3.2 Install Dependencies
+### 5.2 Install Dependencies
 
 ```bash
-# Install Serverless Framework and dependencies
-npm install --save-dev serverless@^4.4.11
+# Install development dependencies (serverless already installed globally)
 npm install --save-dev eslint@^9.14.0 prettier@^3.3.3
 npm install --save-dev eslint-config-prettier@^9.1.0 eslint-plugin-prettier@^5.2.1
 npm install --save-dev @eslint/js@^9.14.0 globals@^15.11.0
@@ -88,7 +189,7 @@ npm install --save-dev cross-env@^10.0.0
 npm install --save @serverless/aws-lambda-sdk@^0.15.15
 ```
 
-### 3.3 Update package.json
+### 5.3 Update package.json
 
 Add these scripts to your `package.json`:
 
@@ -113,11 +214,13 @@ Add these scripts to your `package.json`:
 - **Cross-platform compatibility**: `cross-env` ensures scripts work on Windows, macOS, and Linux
 - **Team-friendly workflow**: Multiple developers can work simultaneously without stage conflicts
 
-## Step 4: Serverless Configuration
+## Step 6: Serverless Configuration
 
-### 4.1 Create serverless.yml
+### 6.1 Create serverless.yml
 
 ```yaml
+# Replace with your organization and app names from Step 3
+# If you didn't create them, you can remove these lines
 org: your-org-name
 app: your-app-name
 service: main
@@ -215,7 +318,7 @@ package:
 - **Development Tools**: Serverless-offline configuration for local development on port 3005
 - **Package Optimization**: Excludes development files and dependencies for smaller deployment packages
 
-### 4.2 Create Lambda Function
+### 6.2 Create Lambda Function
 
 Create `src/main.js`:
 
@@ -244,9 +347,9 @@ export const main = async (event, context) => {
 };
 ```
 
-## Step 5: Development Tools Configuration
+## Step 7: Development Tools Configuration
 
-### 5.1 Create .prettierrc
+### 7.1 Create .prettierrc
 
 ```json
 {
@@ -258,7 +361,7 @@ export const main = async (event, context) => {
 }
 ```
 
-### 5.2 Create eslint.config.mjs
+### 7.2 Create eslint.config.mjs
 
 ```javascript
 import js from '@eslint/js';
@@ -284,9 +387,9 @@ export default [
 ];
 ```
 
-## Step 6: Deployment
+## Step 8: Deployment
 
-### 6.1 Development Deployment (User-Specific)
+### 8.1 Development Deployment (User-Specific)
 
 ```bash
 # Deploy to your personal development stage
@@ -295,14 +398,14 @@ npm run deploy:dev
 
 This creates a stage named `{your-username}-dev` (e.g., `john-dev`, `alice-dev`) to avoid conflicts with other team members.
 
-### 6.2 Production Deployment
+### 8.2 Production Deployment
 
 ```bash
 # Deploy to production stage
 npm run deploy:prod
 ```
 
-### 6.3 Test Deployment
+### 8.3 Test Deployment
 
 After successful deployment, you'll receive an API Gateway endpoint URL. Test it:
 
@@ -314,16 +417,16 @@ curl https://your-api-id.execute-api.us-east-1.amazonaws.com/{username}-dev/test
 curl https://your-api-id.execute-api.us-east-1.amazonaws.com/prod/test
 ```
 
-## Step 7: Local Development
+## Step 9: Local Development
 
-### 7.1 Local Testing
+### 9.1 Local Testing
 
 ```bash
 # Test function locally without AWS
 npm run invoke:local
 ```
 
-### 7.2 Development Server
+### 9.2 Development Server
 
 ```bash
 # Start development server with user-specific staging
@@ -337,9 +440,9 @@ npm run dev
 - **Automatic**: Uses `$(whoami)` to detect username automatically
 - **Cross-platform**: Works on Windows, macOS, and Linux (including WSL)
 
-## Step 8: Team Collaboration Setup
+## Step 10: Team Collaboration Setup
 
-### 8.1 Team Workflow
+### 10.1 Team Workflow
 
 When working in a team:
 
@@ -347,7 +450,7 @@ When working in a team:
 2. **Integration**: Use a shared `dev` or `staging` environment for integration testing
 3. **Production**: Only deploy to `prod` stage for live releases
 
-### 8.2 Stage Management
+### 10.2 Stage Management
 
 Your stages will look like:
 
